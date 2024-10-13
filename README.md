@@ -5275,4 +5275,681 @@ int maxDepth(TreeNode* root){
 }
 ```
 
+---
+id: z4tfazwfzf3fk6a17q9zbg1
+title: TREES
+desc: ''
+updated: 1704513122531
+created: 1704504189333
+---
+
+### BINARY TREE 
+- 0 OR 2 CHILDREN
+
+
+#### REPRESENTATION
+```cpp
+struct Node{
+    int data;
+    struct Node* left;
+    struct Node* right;
+    Node(int val){
+        data = val;
+        left = right = NULL;
+    }
+}
+int main(){
+    struct Node* root = new Node(1);
+    root -> left = new Node(2);
+    root -> right = new Node(3);
+    root -> left -> right = new Node(5);
+    return -1;
+}
+```
+
+### TRAVERSAL TECHNIQUES
+1. BREADTH FIRST SEARCH:- LEVELWISE
+- TC: n
+- SC: n
+```cpp
+vector<vector<int>> levelOrder(TreeNode* root){
+    vector<vector<int>> ans; //ds to store answer
+    if(root == NULL){
+        return ans;
+    }
+    queue<TreeNode*> q;
+    vector<int> level; //storing level wise
+    q.push(root);
+    while(!q.empty()){
+        int size = q.size();
+        for(int i=0; i<size; i++){
+            TreeNode* node = q.front();
+            q.pop();
+            if(node -> left != NULL){
+                q.push(node -> left);
+            }
+            if(node -> right != NULL){
+                q.push(node -> right);
+            }
+            level.push_back(node -> val);
+        } 
+        ans.push_back(level);
+    }
+    return ans;
+}
+```
+2. DFS
+- **INORDER:- LEFT - ROOT - RIGHT**
+**NORMAL APPROACH**
+```cpp
+void inorder(Node){
+    if(Node == null)
+        return;
+    inOrder(Node -> left);
+    cout<<Node -> data<<endl;
+    inOrder(Node -> right);
+}
+```
+**ITERATIVE INORDER**
+```cpp
+vector<int> inOrderTraversal(TreeNode* root){
+    stack<TreeNode*> st;
+    TreeNode* node = root;
+    vector<int> inOrder;
+    while(true){
+        if(node != NULL){
+            st.push(node);
+            node = node -> left;
+        }
+        else{
+            if(st.empty() == true){
+                break;
+            }
+            st.pop();
+            inOrder.push_back(node -> val);
+            node = node -> right;
+        }
+    }
+}
+```
+
+
+- **PREORDER:- ROOT - LEFT - RIGHT**
+- TC: N
+- SC: N
+
+**NORMAL APPROACH**
+```cpp
+void preOrder(Node){
+    if(node == NULL)
+        return;
+
+    cout<<node -> data<<endl;
+    preOrder(node -> left);
+    preOrder(node -> right);
+}
+```
+**ITERATIVE PREORDER**
+- TC: n
+- SC: n(height)
+```cpp
+vector<int> preOrderTraversal(TreeNode* root){
+    vector<int> preOrder;
+    if(root == NULL){
+        return preOrder;
+    }
+    stack<TreeNode*> s;
+    s.push(root);
+    while(!s.empty()){
+        root = st.top();
+        s.pop();
+        preOrder.push_back(root -> val);
+        if(root -> right != NULL){
+            s.push(root -> right);
+        }
+        if(root -> left != NULL){
+            s.push(root -> left);
+        }
+    }
+    return preOrder;
+}
+```
+
+
+- POSTORDER:- LEFT - RIGHT - ROOT
+**NORMAL APPROACH**
+```cpp
+void postOrder(Node){
+    if(node == NULL)
+        return;
+
+    postOrder(node -> left);
+    postOrder(node -> right);
+    cout<<node -> data<<endl;
+}
+```
+
+**ITERATIVE POSTORDER(2 STACK)**
+
+**ITERATIVE POSTORDER(2 STACK)**
+
+
+### MAXIMUM DEPTH OF A TREE
+```cpp
+int maxDepth(TreeNode* root){
+    if(root == NULL){
+        return 0;
+    }
+    int lh = maxDepth(root -> left);
+    int rh = maxDepth(root -> right);
+
+    return 1 + max(lh, rh);
+}
+```
+
+
+
+### DIAMETER OF A BINARY TREE
+
+**NAIVE APPROACH**
+- TC: N ^ 2
+```cpp
+find maxDia(Node* root){
+    if(root == NULL){
+        return;
+    }
+    lh = findLeft(root -> left);
+    rh = findRight(root -> right);
+    
+    maxi = max(maxi, lh+rh);
+    maxDia(root -> left);
+    maxDia(root -> right);
+}
+```
+
+**OPTIMAL APPROACH**
+- TC: N 
+- SC: N
+```cpp
+int diameterofBT(Node* root){
+    int diameter = 0;
+    height(root, diameter);
+    return diameter;
+}
+int height(Node* root, int& diameter){
+    if(root == NULL){
+        return 0;
+    }
+    int lh = masDia(root -> left, maxi);
+    int rh = maxDia(root -> right, maxi);
+  
+    //To update the maximum diameter value.
+    diameter = max(diameter, lh+rh);
+
+    return 1 + max(lh,rh);
+}
+```
+
+
+### MAXIMUM PATH SUM
+- TC: N
+- SC: N
+```cpp
+int maxPathSum(Node* root){
+    int maxi = INT_MIN;
+    maxPathSum(root, maxi);
+    return maxi;
+}
+int maxPath(Node* root,  int& sum) {
+    if (root == NULL) 
+        return 0;
+
+    int left = maxSum(root -> left, sum);
+    int right = maxSumR(root -> right, sum);
+
+    sum = max(sum, left + right + root -> val);
+
+    return max(left, right) + root -> val;
+}
+```
+
+
+### CHECK IF TWO TREES ARE IDENTICAL
+- TC: N
+- SC: N
+```cpp
+bool isTreeSame(Node* p, Node* q){
+    if(p == NULL || q == NULL){
+        return (p == q);
+    }
+    return(p -> val == q -> val) && isTreeSame(p -> left, q -> left) && isTreeSame(p -> right, q -> right);
+}
+```
+
+
+
+### ZIG-ZAG TRAVERSAL
+-  TC: O(N) 
+-  SC: O(H)
+```c++
+vector<vector<int>> zigZagLevelOrder(TreeNode* root){
+
+    vector<vector<int> result>;
+
+    if(root == NULL){
+        return result;
+    }
+
+    queue<TreeNode*> nodeQueue;
+    nodesQueue.push(root);
+    bool isLeftToRight = true;
+
+    while(!nodesQueue.empty()){
+        int size = nodesQueue.size();
+        vector<int> level(size);
+
+        for(int i=0 ; i < size ; i++){
+            TreeNode* node = nodesQueue.front();   
+            nodesQueue.pop();
+
+            int index = isLeftToRight ? i : (size - 1 - i);
+
+            level[index] = node -> val;
+            if(node->left != NULL){
+                nodesQueue.push(node->left);
+            }
+            if(node->right != NULL){
+                nodesQueue.push(node->right);
+            }
+        }
+        isLeftToRight = !isLeftToRight;
+        result.push_back(level)
+    }
+    return result;
+}
+```
+
+### BOUNDARY TRAVERSAL - ANTICLOCKWISE
+
+- TC: O(N)
+-  SC: O(H) / N
+```cpp
+void addLeftBoundary(Node* root, vector<int> &res){
+    Node* curr = root-> left;
+    while(curr){
+        if(!isLeaf(curr)){
+            res.push_back(curr -> data);
+        }
+        if(curr -> left){
+            curr = curr -> left;
+        }
+        else{
+            curr = curr -> right;
+        }
+    }
+}
+void addRightBoundary(Node* root, vector<int> &res){
+    vector<int> temp;
+    Node* curr = root-> right;
+    while(curr){
+        if(!isLeaf(curr)){
+            res.push_back(curr -> data);
+        }
+        if(curr -> right){
+            curr = curr -> right;
+        }
+        else{
+            curr = curr -> left;
+        }
+    }
+    for(int i=temp.size()-1; i >= 0; i--){
+        res.push_back(temp[i]);
+    }
+}
+
+void addLeaves(Node* root, vector<int> &res){
+    if(isLeaf(root)){
+        res.push_back(root -> data){
+            return;
+        }
+    }
+    if(root -> left){
+        addLeaves(root -> left, res);
+    }
+    if(root -> right){
+        addLeaves(root -> right, res);
+    }
+}
+
+vector<int> printBoundary(Node* root){
+    vector<int> res;
+    if(!root)return res;
+    if(!isLeaf(root)){
+        res.push_back(root -> data);
+    }
+    addLeftBoundary(root, res);
+    addLeaves(root, res);
+    addRightBoundary(root, res);
+    return res;
+}
+```
+
+### VERTICAL ORDER TRAVERSAL
+```c++
+class Solution {
+public:
+    vector<vector<int>> verticalTraversal(TreeNode* root) {
+        // Map to store nodes based on their column index, row index, and value
+        map<int, map<int, multiset<int>>> nodes;
+        
+        // Queue for level-order traversal, with each item containing the node and its coordinates
+        queue<pair<TreeNode*, pair<int, int>>> todo;
+        todo.push({root, {0,0}}); // Push the root node with its coordinates (0, 0)
+
+        // Perform level-order traversal
+        while(!todo.empty()) {
+            auto p = todo.front();
+            todo.pop();
+            TreeNode* node = p.first;
+            int x = p.second.first; // Column index
+            int y = p.second.second; // Row index
+            nodes[x][y].insert(node->val); // Insert the node value at its coordinates
+            
+            // Enqueue left child with updated coordinates (x - 1, y + 1)
+            if(node->left) {
+                todo.push({node->left, {x - 1, y + 1}});
+            }
+            // Enqueue right child with updated coordinates (x + 1, y + 1)
+            if(node->right) {
+                todo.push({node->right, {x + 1, y + 1}});
+            }
+        }
+
+        // Extract nodes from the map of maps and generate the result
+        vector<vector<int>> ans;
+        for(auto p : nodes) {
+            vector<int> col;
+            // Concatenate values of each column and insert them into the result
+            for(auto q : p.second) {
+                col.insert(col.end(), q.second.begin(), q.second.end());
+            }
+            ans.push_back(col);
+        }
+        return ans;
+    }
+};
+```
+
+### TOP VIEW OF BINARY TREE
+- TC: n
+- SC: n
+```c++
+class Solution {
+    public:
+
+    vector<int> topView(Node* root){
+        vector<int> ans;
+        if(root == NULL){
+            return ans;
+        }
+        map<int, int> mpp;
+        queue<pair<Node*, int>> q;
+        q.push({root,0});
+        while(!q.empty()){
+            auto it = q.front();
+            q.pop();
+            Node* node = it.first;
+            int line = it.second
+            if(mpp.find(line)==mpp.end()){
+                mpp[line]=node->data;
+            }
+            if(node -> left != NULL){
+                q.push(node -> left, line-1);
+            }
+            if(node -> right != NULL){
+                q.push(node -> right, line+1);
+            }
+        }
+        for(auto it : mpp){
+            ans.push_back(it.second);
+        }
+        return ans;
+    }
+}
+```
+
+### BOTTOM VIEW OF BINARY TREE
+- TC: O(n)
+- SC: O(h)
+```c++
+class Solution {
+    public:
+
+    vector<int> bottomView(Node* root){
+        vector<int> ans;
+        if(root == NULL){
+            return ans;
+        }
+        map<int, int> mpp;
+        queue<pair<Node*, int>> q;
+        q.push({root,0});
+        while(!q.empty()){
+            auto it = q.front();
+            q.pop();
+            Node* node = it.first;
+            int line = it.second
+            mpp[line]=node->data;
+        
+            if(node -> left != NULL){
+                q.push(node -> left, line-1);
+            }
+            if(node -> right != NULL){
+                q.push(node -> right, line+1);
+            }
+        }
+        for(auto it : mpp){
+            ans.push_back(it.second);
+        }
+        return ans;
+    }
+}
+```
+
+### LEFT/RIGHT VIEW OF BINARY TREE
+- TC: O(n)
+- SC: O(H)
+
+```cpp
+class Solution{
+    vector<int> rightSideView(TreeNode* root){
+        vector<int> res;
+        recursion(root, 0, res);
+        return res;
+    }
+    public:
+        void recursion(TreeNode* root, int level, vector<int> &res){
+            if(root == NULL) return;
+            if(res.size() == level){
+                res.push_back(root -> val);
+            }
+            recursion(root -> right, level+1, res);
+
+            recursion(root -> left, level+1, res);
+        }
+}
+
+```
+
+### SYMMETRIC BINARY TREE
+- TC: O(n)
+- SC: O(n)
+```c++
+bool  isSymmetric(TreeNode* root) {
+    return root == NULL || isSymmetricHelp(root->left, root->right){
+        if(left==NULL || right==NULL){
+            return left == right;
+        }
+        if(left -> val != right -> val){
+            return false;
+        }
+        return isSymmetricHelp(left->left, right->right) && isSymmetricHelp(left->right, right->left);
+    }
+}
+```
+
+### ROOT TO NODE / LEAF PATH
+- inorder
+```c++
+class Solution{
+    public:
+        bool getPath(TreeNode *root, vector<int> arr, int x) {
+            if (root == NULL) return false;
+
+            arr.push_back(root -> val);
+
+            if(root->val == x){
+                return true;
+            }        
+            if(getPath(root->left, arr, x) || getPath(root->right,  arr, x)) {
+                return true;
+            }
+            arr.pop_back();
+            return false;
+        }
+    public:
+        vector<int> Solution::solve(TreeNode* A, int B) {
+            vector<int> arr;
+            if(A == NULL){
+                returna arr;
+            }
+            getPath(A, arr, B);
+            return arr;
+        }
+}
+```                                                                                                                                                          
+
+### LOWEST COMMON ANCESTOR IN BT
+- n
+- n
+```cpp
+TreeNode*  lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+    if(root == NULL || root = p || root = q){
+        return root;
+    }
+    TreeNode* left = lowestCommonAncestr(root -> left, p, q);
+    TreeNode* right = lowestCommonAncestr(root -> right, p, q);
+
+    if(left == NULL){
+        return right;
+    }
+    if(right == NULL){
+        return left;
+    }
+    else{ // when both side returns value
+        return root;
+    }
+}
+```
+
+### MAXIMUM WIDTH 
+- no of max nodes possible between leftmost and rightmost nodes in the last level
+- index every node and then return (left - right + 1)
+```c++
+int widthOfBinary(TreeNode* root){
+    if(!root){
+        return 0;
+    }
+    int ans = 0;
+    queue<pair<TreeNode*, int>> q;
+    q.push({root, 0});
+    while(!q.empty()){
+        int size = q.size();
+        int mmin = q.front().second;
+        int first, last;
+        for(int i=0; i<size; i++){
+            int cur_id = q.front().second - mmin;
+            TreeNode* hode = q.front().first;
+            q.pop();
+            if(i==0) first = cur_id;
+            if(i==size-1) last = cur_id;
+            if(node -> left){
+                q.push({node -> left, cur_id*2+1});
+            }
+            if(node -> right){
+                q,push({node -> right, cur_id*2+2});
+            }
+        }
+        ans = max(ans, last - first + 1);
+    }
+    return ans;
+}
+```
+
+### CHILDREN SUM PROPERTY
+- If chil sums greater than parent return sum else return parent value (backtracking)
+```c++
+
+```
+
+### PRINT ALL NODES FROM DISTANCE K
+```C++
+void markParents(TreeNode* root, unordered_map<TreeNode*, TreeNode*> &parent_track, TreeNode* target){
+    queue<TreeNode*> queue;
+    queue.push(root);
+    while(!q.empty()){
+        TreeNode* current = queue.front();
+        queue.pop();
+        if(current -> left){
+            parent_track[current->left] = current;
+            queue.push(current->left);          
+        }
+        if(current -> right){
+            parent_track[curent -> right] = current;
+            queue.push(current ->right);
+        }
+    }
+}
+
+vector<int>  distanceK(TreeNode *root, TreeNode *target, int k) {
+    unordered_map<TreeNode*, TreeNode*> parent_track;
+    markParents(root, parent_track, target);
+
+    unordered_map<TreeNode*, bool> visited;
+    queue<TreeNode*> queue;
+    queue.push(target); 
+    visited[target] = true;
+    int curr_level = 0;
+    while(!queue.empty()){
+        int size = queue.size();
+        if(curr_level == k){
+            break;
+        }
+        curr_level++;
+    }
+    for(int i=0; i<size; i++){
+        TreeNode* current = queue.front();
+        queue.pop();
+        if(current -> left && !visited(current -> right)){
+            queue.push(current -> left);
+            visited[current -> left] = true; 
+        }
+        if(current -> right && !visited(current -> left)){
+            queue.push(current -> right);
+            visited[current -> right] = true;
+        }
+        if(parent_track[current] && !visited[parent_track[current]]){
+            queue.push(parent_track(current));
+            visited[parent_track[current]] = true;
+        }
+    }
+    vector<int> result;
+    while(!queue.empty()){
+        TreeNode* current = queue.front();
+        queue.pop();
+        result.push_back(current->val);
+    }
+    return result;
+}
+```
+
 
